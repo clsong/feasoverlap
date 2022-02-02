@@ -32,7 +32,9 @@ calculate_omega <- function(vertex, nsamples = 100) {
   vertex <- generate_span_vectors(vertex)
   vertex <- cbind(vertex, rep(0, num))
 
-  (convhulln(t(vertex), output.options = TRUE)$vol)^(1 / num)
+  vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)^(1 / num)
+  vol_ball <- (pi^(num/2) / gamma(num/2 + 1))^(1 / num)
+  vol_ori/vol_ball
 }
 
 #' function that normalizes a vector in the L2 norm
