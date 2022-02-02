@@ -1,0 +1,52 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# feasoverlap
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of feasoverlap is to compute the overlap between two feasibility domains.
+
+## Installation
+
+You can install the development version of feasoverlap from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("clsong/feasoverlap")
+```
+
+## Example of the overlap of two random interaction matrix
+
+```{r example}
+library(feasoverlap)
+library(mvtnorm)
+
+#set the parameter for the data
+num = 4
+stren = 0.4
+conne = 1
+
+#generate two random interaction matrices
+set.seed(1)
+A <- interaction_matrix_random(num, stren, conne)
+set.seed(2)
+B <- interaction_matrix_random(num, stren, conne)
+
+calculate_omega(A) #relative size of interaction matrix
+calculate_omega(B) #relative size of interaction matrix
+calculate_omega_overlap(A, B) #overlap of two interaction matrices
+```
