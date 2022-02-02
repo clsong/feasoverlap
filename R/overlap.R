@@ -4,24 +4,34 @@
 #' @param conne connectance of the interaction matrix
 #' @return the generated random matrix
 #' @export
-interaction_matrix_random <- function(num, stren, conne){
-  Inte <- rnorm(num*num, mean = 0, sd = stren)
-  zeroes <- sample(c(rep.int(1,floor(num*num*conne)),rep.int(0,(num*num-floor(num*num*conne)))))
-  Inte[which(zeroes==0)] <- 0
+interaction_matrix_random <- function(num, stren, conne) {
+  Inte <- rnorm(num * num, mean = 0, sd = stren)
+  zeroes <- sample(c(rep.int(1, floor(num * num * conne)), rep.int(0, (num * num - floor(num * num * conne)))))
+  Inte[which(zeroes == 0)] <- 0
   Inte <- matrix(Inte, ncol = num, nrow = num)
   diag(Inte) <- -1
   return(Inte)
 }
 
 #' function that computes the normalized feasibility from an interaction matrix
+#' @import geometry
+#' @import uniformly
 #' @param vertex all the vertexes of the feasibility domain
+#' @param nsamples number of sampled points
 #' @return the normalized feasibility
 #' @export
-calculate_omega <- function(vertex) {
+calculate_omega <- function(vertex, nsamples = 100) {
   num <- nrow(vertex)
   vertex <- generate_span_vectors(vertex)
+
+  set.seed(1010)
+  vertex <- cbind(
+    vertex,
+    vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
+  )
   vertex <- cbind(vertex, rep(0, num))
-  (convhulln(t(vertex), output.options = TRUE)$vol)^(1/num)
+
+  (convhulln(t(vertex), output.options = TRUE)$vol)^(1 / num)
 }
 
 #' function that normalizes a vector in the L2 norm
@@ -29,7 +39,7 @@ calculate_omega <- function(vertex) {
 #' @return the normalized vector
 #' @export
 normalize <- function(a, norm = 2) {
-   a / sqrt(sum(a^2))
+  a / sqrt(sum(a^2))
 }
 
 #' function that normalizes the spanning vectors of the feasibility domain in the L2 norm
@@ -92,8 +102,9 @@ intersection_vertex_detection <- function(S, M) {
   extreme_point_M <- list()
   for (i in 1:ncol(M)) {
     coeff_matrix <- matrix(1, ncol = num, nrow = num)
-    for (j in 1:(num - 1))
+    for (j in 1:(num - 1)) {
       coeff_matrix[j, ] <- Span_M[, combination_M[j, i]]
+    }
     coeff_vector <- c(rep(0, num - 1), 1)
     border_M[[i]] <- solve(coeff_matrix, coeff_vector)
     extreme_point_M[[i]] <- t(coeff_matrix)[1:(num - 1), 1:(num - 1)]
@@ -144,6 +155,7 @@ intersection_vertex_detection <- function(S, M) {
 }
 
 #' function that computes all the extreme points
+#' @import dplyr
 #' @param A one interaction matrix
 #' @param B another interaction matrix
 #' @return all the extreme points that generate the intersection region
@@ -194,19 +206,21 @@ vertex_detection <- function(A, B) {
 #' function that computes the overlap of two feasibility domains
 #' @param A one interaction matrix
 #' @param B another interaction matrix
+#' @param nsamples number of sampled points
 #' @return the normalize feasibility of the intersection region
 #' @export
-calculate_omega_overlap <- function(A, B) {
+calculate_omega_overlap <- function(A, B, nsamples = 100) {
   num <- nrow(A)
 
-  overlap_vertex <- cbind(vertex_detection(A, B), vertex_detection(A, B))
+  overlap_vertex <- vertex_detection(A, B) %>%
+    cbind(vertex_detection(B, A)) %>%
+    unique(MARGIN = 2)
   vertex_detection(B, A)
   if (qr(overlap_vertex)$rank < num) {
     volume_overlap <- 0
   } else {
-    volume_overlap <- calculate_omega(overlap_vertex)
+    volume_overlap <- calculate_omega(overlap_vertex, nsamples)
   }
 
   volume_overlap
 }
-

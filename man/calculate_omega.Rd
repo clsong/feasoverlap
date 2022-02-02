@@ -4,10 +4,12 @@
 \alias{calculate_omega}
 \title{function that computes the normalized feasibility from an interaction matrix}
 \usage{
-calculate_omega(vertex)
+calculate_omega(vertex, nsamples = 100)
 }
 \arguments{
 \item{vertex}{all the vertexes of the feasibility domain}
+
+\item{nsamples}{number of sampled points}
 }
 \value{
 the normalized feasibility

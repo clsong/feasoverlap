@@ -33,20 +33,19 @@ devtools::install_github("clsong/feasoverlap")
 
 ```{r example}
 library(feasoverlap)
-library(mvtnorm)
 
-#set the parameter for the data
-num = 4
-stren = 0.4
-conne = 1
-
-#generate two random interaction matrices
+# generate two random interaction matrices
 set.seed(1)
-A <- interaction_matrix_random(num, stren, conne)
+A <- interaction_matrix_random(num = 4, stren = 0.4, conne = 1)
 set.seed(2)
-B <- interaction_matrix_random(num, stren, conne)
+B <- interaction_matrix_random(num = 4, stren = 0.4, conne = 1)
 
-calculate_omega(A) #relative size of interaction matrix
-calculate_omega(B) #relative size of interaction matrix
-calculate_omega_overlap(A, B) #overlap of two interaction matrices
+calculate_omega(A) # relative size of interaction matrix
+calculate_omega_overlap(A, A) # overlap between the same matrix
+
+calculate_omega(B) # relative size of interaction matrix
+calculate_omega_overlap(B, B) # overlap between the same matrix
+
+calculate_omega_overlap(A, B) # overlap of two interaction matrices
+calculate_omega_overlap(B, A) # overlap of two interaction matrices
 ```
