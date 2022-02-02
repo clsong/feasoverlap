@@ -29,6 +29,7 @@ calculate_omega <- function(vertex, nsamples = 100) {
     vertex,
     vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
   )
+  vertex <- generate_span_vectors(vertex)
   vertex <- cbind(vertex, rep(0, num))
 
   (convhulln(t(vertex), output.options = TRUE)$vol)^(1 / num)
