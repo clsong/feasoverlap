@@ -218,11 +218,18 @@ calculate_omega_overlap <- function(A, B, nsamples = 100) {
   overlap_vertex <- vertex_detection(A, B) %>%
     cbind(vertex_detection(B, A)) %>%
     unique(MARGIN = 2)
-  vertex_detection(B, A)
+
   if (qr(overlap_vertex)$rank < num) {
     volume_overlap <- 0
   } else {
-    volume_overlap <- calculate_omega(overlap_vertex, nsamples)
+    volume_overlap <- tryCatch(
+      {
+        calculate_omega(overlap_vertex, nsamples)
+      },
+      error = function(cond) {
+        0
+      }
+    )
   }
 
   volume_overlap
