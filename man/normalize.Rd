@@ -7,7 +7,9 @@
 normalize(a, norm = 2)
 }
 \arguments{
-\item{a}{= the original vector}
+\item{a}{the original vector}
+
+\item{norm}{specify L^n norm}
 }
 \value{
 the normalized vector
