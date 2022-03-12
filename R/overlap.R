@@ -139,7 +139,8 @@ intersection_vertex_detection <- function(S, M) {
       if (auxi < -1e-10) {
         lambda <- n2 / (n2 - n1)
         possible <- lambda * vertex_1 + (1 - lambda) * vertex_2
-        if (det(extreme_point_M[[j]]) != 0) {
+        emj <- extreme_point_M[[j]]
+        if ((!is.null(ncol(emj)) && det(emj) != 0) || (is.null(ncol(emj)) && emj != 0)) {
           auxi2 <- inside_face_detection(extreme_point_M[[j]], possible[1:(num - 1)])
           if (auxi2 == 1) {
             intersection_vertex[[l]] <- possible
@@ -237,5 +238,3 @@ calculate_omega_overlap <- function(A, B, nsamples = 100) {
 
   volume_overlap
 }
-
-
