@@ -1,6 +1,6 @@
 # nolint start
-#This file shows that calculate_omega_overlap may have some problems 
-#when one of the interacrion matrix has an colunm proportional to rep(1,num). 
+#This file shows that calculate_omega_overlap may have some problems
+#when one of the interacrion matrix has an colunm proportional to rep(1,num).
 library(geometry)
 library(uniformly)
 library(dplyr)
@@ -26,3 +26,4 @@ calculate_omega_overlap(AA,BB)
 calculate_omega_overlap(BB,AA)
 #> Error in solve.default(coeff_matrix, coeff_vector)
 # nolint end
+
