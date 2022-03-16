@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-.Rproj.user
-.Rhistory
-=======
 # History files
 .Rhistory
 .Rapp.history
@@ -37,5 +33,6 @@ docs/
 po/*~
 # RStudio Connect folder
 rsconnect/
+# VS code related
 .vscode
->>>>>>> 2524e6e0d1d2e57959632dec91ca43cb3451e109
+*.tmp.R
