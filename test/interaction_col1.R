@@ -7,19 +7,22 @@ library(dplyr)
 library(tidyverse)
 library(mvtnorm)
 
-#library(feasoverlap)
-#source("R/overlap.R")
+library(feasoverlap)
+# library(pracma)
+# source("R/overlap.R")
 
-#2d case
+# 2d case
+set.seed(22)
 A <- matrix(c(-1,0.375,-1,-1),2,2)
 B <- matrix(c(-1,0,0,-1),2,2)
 calculate_omega_overlap(A,B)
-#>Error in UseMethod("determinant"
+#> Error in UseMethod("determinant"
 
-#3d case
+# 3d case
+set.seed(32)
 AA <- interaction_matrix_random(3,1,0.8)
 BB <- matrix(c(0.375,-0.18,0.45,0.42,0.6,-2,-1,-1,-1),3,3)
 calculate_omega_overlap(AA,BB)
 calculate_omega_overlap(BB,AA)
-#>Error in solve.default(coeff_matrix, coeff_vector)
+#> Error in solve.default(coeff_matrix, coeff_vector)
 # nolint end

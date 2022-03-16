@@ -36,3 +36,4 @@ rsconnect/
 # VS code related
 .vscode
 *.tmp.R
+.Rprofile
