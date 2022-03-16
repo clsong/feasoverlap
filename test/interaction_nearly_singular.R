@@ -3,7 +3,7 @@ rm(list = ls())
 
 library(feasoverlap)
 
-num <- 5; stren <- 2; conne <- 1
+num <- 3; stren <- 2; conne <- 1
 
 interaction_matrix_ill <- function(num, stren, conne, epsilon = 10^(-5), threshold = 0.001) {
   inte <- interaction_matrix_random(num, stren, conne)
@@ -19,8 +19,8 @@ interaction_matrix_ill <- function(num, stren, conne, epsilon = 10^(-5), thresho
 set.seed(50)
 A <- interaction_matrix_ill(num, stren, conne)
 
-B <- A[1:(num-1),1:(num-1)] %>% 
-  cbind(c(rep(0,num-1))) %>% 
+B <- A[1:(num-1),1:(num-1)] %>%
+  cbind(c(rep(0,num-1))) %>%
   rbind(c(rep(0,num-1),-1))
 
 calculate_omega_overlap(A,B)
@@ -28,4 +28,4 @@ min(calculate_omega(A), calculate_omega(B))
 
 (ratio <- calculate_omega_overlap(A,B)/min(calculate_omega(A), calculate_omega(B)))
 #ratio of raw-omega-value: seems to be scaled with epsilon
-ratio^num 
+ratio^num
