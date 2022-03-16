@@ -99,62 +99,67 @@ inside_vertex_detection <- function(A, B) {
 #' @export
 intersection_vertex_detection <- function(S, M) {
   num <- ncol(S)
-  combination_S <- combn(1:ncol(S), 2)
-  combination_M <- combn(1:ncol(S), (num - 1))
-  Span_S <- generate_span_vectors(S)
-  Span_M <- generate_span_vectors(M)
-
-  border_M <- list()
-  extreme_point_M <- list()
-  for (i in 1:ncol(M)) {
-    coeff_matrix <- matrix(1, ncol = num, nrow = num)
-    for (j in 1:(num - 1)) {
-      coeff_matrix[j, ] <- Span_M[, combination_M[j, i]]
-    }
-    coeff_vector <- c(rep(0, num - 1), 1)
-    border_M[[i]] <- solve(coeff_matrix, coeff_vector)
-    extreme_point_M[[i]] <- t(coeff_matrix)[1:(num - 1), 1:(num - 1)]
+  if (num == 2) {
+    return(list())
   }
+  else {
+    combination_S <- combn(1:ncol(S), 2)
+    combination_M <- combn(1:ncol(S), (num - 1))
+    Span_S <- generate_span_vectors(S)
+    Span_M <- generate_span_vectors(M)
 
-  inside_face_detection <- function(extreme_point, test_vector) {
-    lambda <- solve(extreme_point, test_vector)
-    if (sum(lambda >= -1e-10) == length(lambda)) {
-      return(1)
-    } else {
-      return(0)
+    border_M <- list()
+    extreme_point_M <- list()
+    for (i in 1:ncol(M)) {
+      coeff_matrix <- matrix(1, ncol = num, nrow = num)
+      for (j in 1:(num - 1)) {
+        coeff_matrix[j, ] <- Span_M[, combination_M[j, i]]
+      }
+      coeff_vector <- c(rep(0, num - 1), 1)
+      border_M[[i]] <- solve(coeff_matrix, coeff_vector)
+      extreme_point_M[[i]] <- t(coeff_matrix)[1:(num - 1), 1:(num - 1)]
     }
-  }
 
-  l <- 1
-  intersection_vertex <- list()
-  side <- c()
-  for (i in 1:ncol(combination_S)) {
-    vertex_1 <- Span_S[, combination_S[1, i]]
-    vertex_2 <- Span_S[, combination_S[2, i]]
-    for (j in 1:length(border_M)) {
-      n1 <- sum(vertex_1 * border_M[[j]])
-      n2 <- sum(vertex_2 * border_M[[j]])
+    inside_face_detection <- function(extreme_point, test_vector) {
+      lambda <- solve(extreme_point, test_vector)
+      if (sum(lambda >= -1e-10) == length(lambda)) {
+        return(1)
+      } else {
+        return(0)
+      }
+    }
 
-      auxi <- n1 * n2
-      if (auxi < -1e-10) {
-        lambda <- n2 / (n2 - n1)
-        possible <- lambda * vertex_1 + (1 - lambda) * vertex_2
-        emj <- extreme_point_M[[j]]
-        if ((!is.null(ncol(emj)) && det(emj) != 0) || (is.null(ncol(emj)) && emj != 0)) {
-          auxi2 <- inside_face_detection(extreme_point_M[[j]], possible[1:(num - 1)])
-          if (auxi2 == 1) {
-            intersection_vertex[[l]] <- possible
-            side[l] <- j
-            l <- l + 1
+    l <- 1
+    intersection_vertex <- list()
+    side <- c()
+    for (i in 1:ncol(combination_S)) {
+      vertex_1 <- Span_S[, combination_S[1, i]]
+      vertex_2 <- Span_S[, combination_S[2, i]]
+      for (j in 1:length(border_M)) {
+        n1 <- sum(vertex_1 * border_M[[j]])
+        n2 <- sum(vertex_2 * border_M[[j]])
+
+        auxi <- n1 * n2
+        if (auxi < -1e-10) {
+          lambda <- n2 / (n2 - n1)
+          possible <- lambda * vertex_1 + (1 - lambda) * vertex_2
+
+          if (det(extreme_point_M[[j]]) != 0) {
+            auxi2 <- inside_face_detection(extreme_point_M[[j]], possible[1:(num - 1)])
+            if (auxi2 == 1) {
+              intersection_vertex[[l]] <- possible
+              side[l] <- j
+              l <- l + 1
+            }
           }
         }
       }
     }
-  }
 
-  if (length(intersection_vertex) > 0) {
-    for (i in 1:length(intersection_vertex)) {
-      intersection_vertex[[i]] <- normalize(intersection_vertex[[i]])
+    if (length(intersection_vertex) > 0) {
+      for (i in 1:length(intersection_vertex)) {
+        intersection_vertex[[i]] <- normalize(intersection_vertex[[i]])
+      }
     }
   }
 
