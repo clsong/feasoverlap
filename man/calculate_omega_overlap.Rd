@@ -4,12 +4,14 @@
 \alias{calculate_omega_overlap}
 \title{function that computes the overlap of two feasibility domains}
 \usage{
-calculate_omega_overlap(A, B, nsamples = 100)
+calculate_omega_overlap(A, B, raw = FALSE, nsamples = 100)
 }
 \arguments{
 \item{A}{one interaction matrix}
 
 \item{B}{another interaction matrix}
+
+\item{raw}{TRUE: raw omega, FALSE: normalized omega}
 
 \item{nsamples}{number of sampled points}
 }
