@@ -3,8 +3,9 @@ Title: Measure the overlap between two high-dimensional feasibility domain
 Version: 0.1
 Authors@R: 
     c(person("Chuliang", "Song", , "clsong.ecology@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-7490-8626"),
-      person("Chengyi", "Long", , "ryanlong@mit.edu", role = c("aut", "cre))
+           comment = c(ORCID = "0000-0001-7490-8626")),
+      person("Chengyi", "Long", , "ryanlong@mit.edu", role = c("aut"))
+      )
 Description: Measure the overlap between two high-dimensional feasibility domain.
 License: MIT + file LICENSE
 Encoding: UTF-8
