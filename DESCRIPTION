@@ -20,7 +20,8 @@ Imports:
     mvtnorm,
     purrr,
     tidyr,
-    uniformly
+    uniformly,
+    pracma
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
