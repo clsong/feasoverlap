@@ -19,10 +19,11 @@ interaction_matrix_random <- function(num, stren, conne) {
 #' @import geometry
 #' @import uniformly
 #' @param vertex all the vertexes of the feasibility domain
+#' @param raw TRUE: raw omega, FALSE: normalized omega
 #' @param nsamples number of sampled points
 #' @return the normalized feasibility
 #' @export
-calculate_omega <- function(vertex, nsamples = 100) {
+calculate_omega <- function(vertex, raw = FALSE, nsamples = 100) {
   num <- nrow(vertex)
   vertex <- generate_span_vectors(vertex)
 
@@ -34,9 +35,15 @@ calculate_omega <- function(vertex, nsamples = 100) {
   vertex <- generate_span_vectors(vertex)
   vertex <- cbind(vertex, rep(0, num))
 
-  vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)^(1 / num)
-  vol_ball <- (pi^(num/2) / gamma(num/2 + 1))^(1 / num)
-  vol_ori/vol_ball
+  vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)
+  vol_ball <- (pi^(num/2) / gamma(num/2 + 1))
+  if(raw == FALSE){
+    return((vol_ori / vol_ball) ^ (1 / num))
+  }
+  else{
+    return(vol_ori / vol_ball)
+  }
+  
 }
 
 #' function that normalizes a vector in the L2 norm
@@ -223,10 +230,11 @@ vertex_detection <- function(A, B) {
 #' function that computes the overlap of two feasibility domains
 #' @param A one interaction matrix
 #' @param B another interaction matrix
+#' @param raw TRUE: raw omega, FALSE: normalized omega
 #' @param nsamples number of sampled points
 #' @return the normalize feasibility of the intersection region
 #' @export
-calculate_omega_overlap <- function(A, B, nsamples = 100) {
+calculate_omega_overlap <- function(A, B, raw = FALSE, nsamples = 100) {
   num <- nrow(A)
 
   overlap_vertex <- vertex_detection(A, B) %>%
@@ -238,7 +246,7 @@ calculate_omega_overlap <- function(A, B, nsamples = 100) {
   } else {
     volume_overlap <- tryCatch(
       {
-        calculate_omega(overlap_vertex, nsamples)
+        calculate_omega(overlap_vertex, raw, nsamples)
       },
       error = function(cond) {
         0
