@@ -4,7 +4,7 @@ Version: 0.1
 Authors@R: 
     c(person("Chuliang", "Song", , "clsong.ecology@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7490-8626")),
-      person("Chengyi", "Long", , "ryanlong@mit.edu", role = c("aut"),
+      person("Chengyi", "Long", , "cylong@mit.edu", role = c("aut"),
       comment = c(ORCID = "0000-0002-6005-3740"))
       )
 Description: Measure the overlap between two high-dimensional feasibility domain.
