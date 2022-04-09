@@ -8,7 +8,6 @@ library(tidyverse)
 library(mvtnorm)
 
 library(feasoverlap)
-# library(pracma)
 # source("R/overlap.R")
 
 # 2d case
