@@ -306,7 +306,7 @@ calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
   sign <- -diag(B)
 
   test_feasibility <- function(A) {
-    r <- rnorm(7)
+    r <- rnorm(num)
     r <- r / sqrt(sum(r^2))
     r <- abs(r) * sign
     N <- -solve(A, r)
