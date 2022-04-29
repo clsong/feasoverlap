@@ -19,6 +19,7 @@ interaction_matrix_random <- function(num, stren, conne) {
 #' @import geometry
 #' @import uniformly
 #' @import mvtnorm
+#' @importFrom stats runif
 #' @param vertex all the vertexes of the feasibility domain
 #' @param raw TRUE: raw omega, FALSE: normalized omega
 #' @param nsamples number of sampled points
@@ -297,6 +298,7 @@ calculate_omega_overlap <- function(A, B, raw = FALSE, nsamples = 100) {
 #' @param B the constraint matrix
 #' @param raw TRUE: raw omega, FALSE: normalized omega
 #' @param nsamples number of sampled points
+#' @import purrr
 #' @return the normalize feasibility of the intersection region
 #' @export
 calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
