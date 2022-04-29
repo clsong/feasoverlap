@@ -31,19 +31,19 @@ set.seed(2)
 B <- interaction_matrix_random(num = 4, stren = 0.4, conne = 1)
 
 calculate_omega(A) # relative size of interaction matrix
-#> [1] 0.4710153
+#> [1] 0.4895205
 calculate_omega_overlap(A, A) # overlap between the same matrix
-#> [1] 0.4710153
+#> [1] 0.4895205
 
 calculate_omega(B) # relative size of interaction matrix
-#> [1] 0.461008
+#> [1] 0.4743946
 calculate_omega_overlap(B, B) # overlap between the same matrix
-#> [1] 0.461008
+#> [1] 0.4743946
 
 calculate_omega_overlap(A, B) # overlap of two interaction matrices
-#> [1] 0.3115771
+#> [1] 0.316648
 calculate_omega_overlap(B, A) # overlap of two interaction matrices
-#> [1] 0.3134456
+#> [1] 0.326564
 ```
 
 ## Example of the normalized size of the feasibility domain of a random interaction matrix under linear biological inequalities
@@ -57,9 +57,9 @@ C1 <- diag(c(-1,-1,-1), 3) #imposing a biological constraint. Here it refers to 
 C2 <- diag(c(1,-1,1), 3)  #imposing a biological constraint. Here it refers to that the growth rates of species 1 and 3 have to be negative, and the growth rates of species 2 has to be positive
 
 calculate_omega(A) #relative size of the original interaction matrix
-#> [1] 0.4954943
+#> [1] 0.5073363
 calculate_omega_overlap(A, C1) #the normalized size of the feasibility domain of a random interaction matrix under linear biological constriants C1
-#> [1] 0.4222341
+#> [1] 0.4306551
 calculate_omega_overlap(A, C2) #the normalized size of the feasibility domain of a random interaction matrix under linear biological constriants C2
-#> [1] 0.1584054
+#> [1] 0.16287
 ```
