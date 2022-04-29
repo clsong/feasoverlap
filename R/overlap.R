@@ -18,48 +18,68 @@ interaction_matrix_random <- function(num, stren, conne) {
 #' function that computes the normalized feasibility from an interaction matrix
 #' @import geometry
 #' @import uniformly
+#' @import mvtnorm
 #' @param vertex all the vertexes of the feasibility domain
 #' @param raw TRUE: raw omega, FALSE: normalized omega
 #' @param nsamples number of sampled points
+#' @param method either 'convex hull' or 'sphere'
 #' @return the normalized feasibility
 #' @export
-calculate_omega <- function(vertex, raw = FALSE, nsamples = 100) {
+calculate_omega <- function(vertex, raw = FALSE, nsamples = 100,
+                            method = "convex_hull") {
   num <- nrow(vertex)
   vertex <- generate_span_vectors(vertex)
 
-  set.seed(1010)
-  vertex <- cbind(
-    vertex,
-    vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
-  )
-  if(num < 5){
-    vertex <- generate_span_vectors(vertex) %*% diag(
-      runif(
-        ncol(vertex),
-        (1 - .05 * (num - 2)),
-        (1 + .05 * (num - 2))
-      )
+  if (method == "convex_hull") {
+    set.seed(1010)
+    vertex <- cbind(
+      vertex,
+      vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
     )
-  } else{
-    vertex <- generate_span_vectors(vertex) %*% diag(
-      runif(
-        ncol(vertex),
-        (1 - .05 * (num - 2)),
-        (1 + .1 * (num - 2))
+    if (num < 5) {
+      vertex <- generate_span_vectors(vertex) %*% diag(
+        runif(
+          ncol(vertex),
+          (1 - .05 * (num - 2)),
+          (1 + .05 * (num - 2))
+        )
       )
+    } else {
+      vertex <- generate_span_vectors(vertex) %*% diag(
+        runif(
+          ncol(vertex),
+          (1 - .05 * (num - 2)),
+          (1 + .1 * (num - 2))
+        )
+      )
+    }
+
+    vertex <- cbind(vertex, rep(0, num))
+
+    vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)
+    vol_ball <- (pi^(num / 2) / gamma(num / 2 + 1))
+    # vol_ball <- calculate_omega(diag(num), nsamples = nsamples)
+
+    omega <- ifelse(raw == FALSE,
+      (vol_ori / vol_ball)^(1 / num),
+      vol_ori / vol_ball
     )
   }
-
-  vertex <- cbind(vertex, rep(0, num))
-
-  vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)
-  vol_ball <- (pi^(num / 2) / gamma(num / 2 + 1))
-  # vol_ball <- calculate_omega(diag(num), nsamples = nsamples)
-  if (raw == FALSE) {
-    return((vol_ori / vol_ball)^(1 / num))
-  } else {
-    return(vol_ori / vol_ball)
+  if (method == "sphere") {
+    m <- matrix(0, num, 1)
+    a <- matrix(0, num, 1)
+    b <- matrix(Inf, num, 1)
+    d <- pmvnorm(
+      lower = rep(0, num),
+      upper = rep(Inf, num),
+      mean = rep(0, num), sigma = solve(t(vertex) %*% vertex)
+    )
+    omega <- ifelse(raw == FALSE,
+      d[1]^(1 / num),
+      d[1]
+    )
   }
+  omega
 }
 
 #' function that normalizes a vector in the L2 norm
@@ -303,5 +323,5 @@ calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
     mean(feasibility)^(1 / num)
   )
 
-  volume_overlap
+  volume_overlap * calculate_omega(B, method = 'sphere')
 }
