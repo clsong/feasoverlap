@@ -281,7 +281,7 @@ calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
   }
 
   feasibility <-  1:nsamples %>%
-    map_dbl(~feasibility(A))
+    map_dbl(~test_feasibility(A))
 
   volume_overlap <- ifelse(raw,
     mean(feasibility),
