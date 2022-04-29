@@ -32,11 +32,29 @@ calculate_omega <- function(vertex, raw = FALSE, nsamples = 100) {
     vertex,
     vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
   )
-  vertex <- generate_span_vectors(vertex)
+  if(num < 5){
+    vertex <- generate_span_vectors(vertex) %*% diag(
+      runif(
+        ncol(vertex),
+        (1 - .05 * (num - 2)),
+        (1 + .05 * (num - 2))
+      )
+    )
+  } else{
+    vertex <- generate_span_vectors(vertex) %*% diag(
+      runif(
+        ncol(vertex),
+        (1 - .05 * (num - 2)),
+        (1 + .1 * (num - 2))
+      )
+    )
+  }
+
   vertex <- cbind(vertex, rep(0, num))
 
   vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)
   vol_ball <- (pi^(num / 2) / gamma(num / 2 + 1))
+  # vol_ball <- calculate_omega(diag(num), nsamples = nsamples)
   if (raw == FALSE) {
     return((vol_ori / vol_ball)^(1 / num))
   } else {
