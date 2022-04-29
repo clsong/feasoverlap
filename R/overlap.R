@@ -36,14 +36,12 @@ calculate_omega <- function(vertex, raw = FALSE, nsamples = 100) {
   vertex <- cbind(vertex, rep(0, num))
 
   vol_ori <- (convhulln(t(vertex), output.options = TRUE)$vol)
-  vol_ball <- (pi^(num/2) / gamma(num/2 + 1))
-  if(raw == FALSE){
-    return((vol_ori / vol_ball) ^ (1 / num))
-  }
-  else{
+  vol_ball <- (pi^(num / 2) / gamma(num / 2 + 1))
+  if (raw == FALSE) {
+    return((vol_ori / vol_ball)^(1 / num))
+  } else {
     return(vol_ori / vol_ball)
   }
-
 }
 
 #' function that normalizes a vector in the L2 norm
@@ -110,8 +108,7 @@ intersection_vertex_detection <- function(S, M) {
   num <- ncol(S)
   if (num == 2) {
     return(list())
-  }
-  else {
+  } else {
     combination_S <- combn(1:ncol(S), 2)
     combination_M <- combn(1:ncol(S), (num - 1))
     Span_S <- generate_span_vectors(S)
@@ -124,7 +121,7 @@ intersection_vertex_detection <- function(S, M) {
       for (j in 1:(num - 1)) {
         coeff_matrix[j, ] <- Span_M[, combination_M[j, i]]
       }
-      if(Rank(coeff_matrix) == (num - 1)){
+      if (Rank(coeff_matrix) == (num - 1)) {
         border_M[[i]] <- nullspace(coeff_matrix)
       } else {
         stop("border_M_i is denegerated. Check the dimension.")
@@ -268,24 +265,24 @@ calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
   num <- nrow(A)
   sign <- -diag(B)
 
-  test_feasibility <- function(A){
+  test_feasibility <- function(A) {
     r <- rnorm(7)
     r <- r / sqrt(sum(r^2))
     r <- abs(r) * sign
     N <- -solve(A, r)
-    ifelse(sum(N<0) == 0, 1, 0)
+    ifelse(sum(N < 0) == 0, 1, 0)
   }
 
-  if(missing(nsamples)){
+  if (missing(nsamples)) {
     nsamples <- 2^num * 250
   }
 
-  feasibility <-  1:nsamples %>%
-    map_dbl(~test_feasibility(A))
+  feasibility <- 1:nsamples %>%
+    map_dbl(~ test_feasibility(A))
 
   volume_overlap <- ifelse(raw,
     mean(feasibility),
-    mean(feasibility)^(1/num)
+    mean(feasibility)^(1 / num)
   )
 
   volume_overlap
