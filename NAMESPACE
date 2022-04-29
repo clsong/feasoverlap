@@ -2,6 +2,7 @@
 
 export("%>%")
 export(calculate_omega)
+export(calculate_omega_constraint)
 export(calculate_omega_overlap)
 export(generate_span_vectors)
 export(inside_vertex_detection)

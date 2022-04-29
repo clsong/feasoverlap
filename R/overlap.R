@@ -43,7 +43,7 @@ calculate_omega <- function(vertex, raw = FALSE, nsamples = 100) {
   else{
     return(vol_ori / vol_ball)
   }
-  
+
 }
 
 #' function that normalizes a vector in the L2 norm
@@ -257,4 +257,36 @@ calculate_omega_overlap <- function(A, B, raw = FALSE, nsamples = 100) {
   volume_overlap
 }
 
-# nolint end
+#' function that computes the overlap of two feasibility domains
+#' @param A one interaction matrix
+#' @param B the constraint matrix
+#' @param raw TRUE: raw omega, FALSE: normalized omega
+#' @param nsamples number of sampled points
+#' @return the normalize feasibility of the intersection region
+#' @export
+calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples) {
+  num <- nrow(A)
+  sign <- -diag(B)
+
+  test_feasibility <- function(A){
+    r <- rnorm(7)
+    r <- r / sqrt(sum(r^2))
+    r <- abs(r) * sign
+    N <- -solve(A, r)
+    ifelse(sum(N<0) == 0, 1, 0)
+  }
+
+  if(missing(nsamples)){
+    nsamples <- 2^num * 250
+  }
+
+  feasibility <-  1:nsamples %>%
+    map_dbl(~feasibility(A))
+
+  volume_overlap <- ifelse(raw,
+    mean(feasibility),
+    mean(feasibility)^(1/num)
+  )
+
+  volume_overlap
+}
