@@ -2,9 +2,9 @@
 % Please edit documentation in R/overlap.R
 \name{calculate_omega_constraint}
 \alias{calculate_omega_constraint}
-\title{function that computes the overlap of two feasibility domains}
+\title{function that computes the constrained feasibility domain size}
 \usage{
-calculate_omega_constraint(A, B, raw = FALSE, nsamples)
+calculate_omega_constraint(A, B, raw = FALSE, nsamples, method = "sphere")
 }
 \arguments{
 \item{A}{one interaction matrix}
@@ -13,11 +13,21 @@ calculate_omega_constraint(A, B, raw = FALSE, nsamples)
 
 \item{raw}{TRUE: raw omega, FALSE: normalized omega}
 
-\item{nsamples}{number of sampled points}
+\item{nsamples}{number of sampled points (for montecarlo and legacy methods)}
+
+\item{method}{one of 'sphere', 'montecarlo', or 'legacy'}
 }
 \value{
-the normalize feasibility of the intersection region
+the normalized feasibility of the intersection region
 }
 \description{
-function that computes the overlap of two feasibility domains
+Three methods are available:
+\itemize{
+\item \code{"sphere"} (default): Uses multivariate normal integration. For a
+diagonal constraint matrix B, constructs the constraint
+\eqn{C = [-A^{-1}; B]} and computes \eqn{P(Cr > 0)}.
+\item \code{"montecarlo"}: Samples growth rate vectors and checks feasibility
+under the constraint. Good for high dimensions.
+\item \code{"legacy"}: Original sampling method kept for backward compatibility.
+}
 }

@@ -4,12 +4,10 @@
 \alias{normalize}
 \title{function that normalizes a vector in the L2 norm}
 \usage{
-normalize(a, norm = 2)
+normalize(a)
 }
 \arguments{
 \item{a}{the original vector}
-
-\item{norm}{specify L^n norm}
 }
 \value{
 the normalized vector

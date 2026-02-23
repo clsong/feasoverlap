@@ -4,7 +4,13 @@
 \alias{calculate_omega}
 \title{function that computes the normalized feasibility from an interaction matrix}
 \usage{
-calculate_omega(vertex, raw = FALSE, nsamples = 100, method = "convex_hull")
+calculate_omega(
+  vertex,
+  raw = FALSE,
+  nsamples = 100,
+  method = "convex_hull",
+  seed = 1010
+)
 }
 \arguments{
 \item{vertex}{all the vertexes of the feasibility domain}
@@ -13,7 +19,9 @@ calculate_omega(vertex, raw = FALSE, nsamples = 100, method = "convex_hull")
 
 \item{nsamples}{number of sampled points}
 
-\item{method}{either 'convex hull' or 'sphere'}
+\item{method}{either 'convex_hull' or 'sphere'}
+
+\item{seed}{random seed for reproducibility (default: 1010). Set to NULL to use current RNG state.}
 }
 \value{
 the normalized feasibility

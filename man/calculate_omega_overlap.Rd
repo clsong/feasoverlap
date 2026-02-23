@@ -4,7 +4,7 @@
 \alias{calculate_omega_overlap}
 \title{function that computes the overlap of two feasibility domains}
 \usage{
-calculate_omega_overlap(A, B, raw = FALSE, nsamples = 100)
+calculate_omega_overlap(A, B, raw = FALSE, nsamples = 1000, method = "sphere")
 }
 \arguments{
 \item{A}{one interaction matrix}
@@ -13,11 +13,24 @@ calculate_omega_overlap(A, B, raw = FALSE, nsamples = 100)
 
 \item{raw}{TRUE: raw omega, FALSE: normalized omega}
 
-\item{nsamples}{number of sampled points}
+\item{nsamples}{number of sampled points (for convex_hull and montecarlo methods)}
+
+\item{method}{one of 'sphere', 'montecarlo', or 'convex_hull'}
 }
 \value{
-the normalize feasibility of the intersection region
+the normalized feasibility of the intersection region
 }
 \description{
-function that computes the overlap of two feasibility domains
+Three methods are available:
+\itemize{
+\item \code{"sphere"} (default): Uses multivariate normal integration via
+\code{pmvnorm}. Constructs the 2n-dimensional constraint matrix
+\eqn{C = [-A^{-1}; -B^{-1}]} and computes
+\eqn{P(C r > 0)} where \eqn{r \sim N(0, I)}.
+This is deterministic, symmetric, and avoids vertex enumeration entirely.
+\item \code{"montecarlo"}: Samples uniformly on the unit sphere and checks
+membership in both feasibility cones. Good for high dimensions (n > 15).
+\item \code{"convex_hull"}: Legacy method using vertex enumeration and Qhull
+convex hull computation. Kept for backward compatibility.
+}
 }
