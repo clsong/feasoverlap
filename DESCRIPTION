@@ -1,5 +1,5 @@
 Package: feasoverlap
-Title: Measure the overlap between two high-dimensional feasibility domain
+Title: Measure the Overlap Between Two High-Dimensional Feasibility Domains
 Version: 0.3
 Authors@R: 
     c(person("Chuliang", "Song", , "clsong.ecology@gmail.com", role = c("aut", "cre"),
@@ -12,13 +12,15 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Depends: R (>= 4.0.0)
 Imports: 
     geometry,
     magrittr,
     mvtnorm,
+    pracma,
     stats,
     uniformly,
-    pracma
+    utils
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
