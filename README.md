@@ -1,65 +1,84 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# feasoverlap <img src="man/figures/logo.png" align="right" height="137"/>
+# feasoverlap <img src="man/figures/logo.png" align="right" height="139"/>
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/clsong/feasoverlap/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/clsong/feasoverlap/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of feasoverlap is to compute the overlap between two
-feasibility domains.
+**feasoverlap** computes the overlap between high-dimensional feasibility domains — a key quantity for understanding species coexistence in ecological communities.
 
-## Installation
+## 📦 Installation
 
-You can install the development version of feasoverlap from
-[GitHub](https://github.com/) with:
+Install the development version from GitHub:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("clsong/feasoverlap")
 ```
 
-## Example of the overlap of two random interaction matrix
+## 🚀 Quick Start
+
+### Overlap between two interaction matrices
 
 ``` r
 library(feasoverlap)
 
-# generate two random interaction matrices
+# Generate two random interaction matrices
 set.seed(1)
 A <- interaction_matrix_random(num = 4, stren = 0.4, conne = 1)
 set.seed(2)
 B <- interaction_matrix_random(num = 4, stren = 0.4, conne = 1)
 
-calculate_omega(A) # relative size of interaction matrix
+calculate_omega(A) # feasibility domain size of A
 #> [1] 0.4895205
-calculate_omega_overlap(A, A) # overlap between the same matrix
-#> [1] 0.4895205
-
-calculate_omega(B) # relative size of interaction matrix
-#> [1] 0.4743946
-calculate_omega_overlap(B, B) # overlap between the same matrix
+calculate_omega(B) # feasibility domain size of B
 #> [1] 0.4743946
 
-calculate_omega_overlap(A, B) # overlap of two interaction matrices
+calculate_omega_overlap(A, B) # overlap of A and B
 #> [1] 0.316648
-calculate_omega_overlap(B, A) # overlap of two interaction matrices
+calculate_omega_overlap(B, A) # overlap of B and A
 #> [1] 0.326564
 ```
 
-## Example of the normalized size of the feasibility domain of a random interaction matrix under linear biological inequalities
+### Feasibility under biological constraints
 
 ``` r
 library(feasoverlap)
 
 set.seed(4)
-A <- interaction_matrix_random(3, 0.4, 1) #generate a random interaction matrix
-C1 <- diag(c(-1,-1,-1), 3) #imposing a biological constraint. Here it refers to that the growth rates of all species have to be positive
-C2 <- diag(c(1,-1,1), 3)  #imposing a biological constraint. Here it refers to that the growth rates of species 1 and 3 have to be negative, and the growth rates of species 2 has to be positive
+A <- interaction_matrix_random(3, 0.4, 1)
 
-calculate_omega(A) #relative size of the original interaction matrix
+# Constraint: all growth rates must be positive
+C1 <- diag(c(-1, -1, -1), 3)
+
+# Constraint: species 1 & 3 negative, species 2 positive growth rate
+C2 <- diag(c(1, -1, 1), 3)
+
+calculate_omega(A)              # unconstrained feasibility
 #> [1] 0.5073363
-calculate_omega_overlap(A, C1) #the normalized size of the feasibility domain of a random interaction matrix under linear biological constriants C1
+calculate_omega_overlap(A, C1)  # feasibility under C1
 #> [1] 0.4306551
-calculate_omega_overlap(A, C2) #the normalized size of the feasibility domain of a random interaction matrix under linear biological constriants C2
+calculate_omega_overlap(A, C2)  # feasibility under C2
 #> [1] 0.16287
 ```
+
+## 📖 Key Concepts
+
+| Function | Description |
+|---|---|
+| `interaction_matrix_random()` | Generate random interaction matrices |
+| `calculate_omega()` | Compute the normalized size of a feasibility domain |
+| `calculate_omega_overlap()` | Compute the overlap between two feasibility domains |
+
+## 📄 Citation
+
+If you use **feasoverlap** in your research, please cite:
+
+> Song, C. & Long, C. (2025). feasoverlap: Measure the Overlap Between Two High-Dimensional Feasibility Domains. R package.
+
+## 📝 License
+
+MIT © [Chuliang Song](https://chuliangsong.com), [Chengyi Long](https://github.com/chengyilong)

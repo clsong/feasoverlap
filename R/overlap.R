@@ -30,9 +30,23 @@ interaction_matrix_random <- function(num, stren, conne) {
   abs(x - y) < tol
 }
 
+#' Internal helper: sample uniformly on the unit sphere
+#' Replaces uniformly::runif_on_sphere to avoid the rgl dependency
+#' that causes X11/GLX warnings on headless systems.
+#' @param n number of points to sample
+#' @param d dimension of the sphere
+#' @param r radius (default 1)
+#' @return n x d matrix of points on the sphere
+#' @importFrom stats rnorm
+#' @keywords internal
+.runif_on_sphere <- function(n, d, r = 1) {
+  x <- matrix(rnorm(n * d), nrow = n, ncol = d)
+  norms <- sqrt(rowSums(x^2))
+  r * x / norms
+}
+
 #' function that computes the normalized feasibility from an interaction matrix
 #' @import geometry
-#' @import uniformly
 #' @import mvtnorm
 #' @importFrom stats runif
 #' @param vertex all the vertexes of the feasibility domain
@@ -58,7 +72,7 @@ calculate_omega <- function(vertex, raw = FALSE, nsamples = 100,
 
     vertex <- cbind(
       vertex,
-      vertex %*% t(abs(runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
+      vertex %*% t(abs(.runif_on_sphere(n = nsamples, d = ncol(vertex), r = 1)))
     )
     if (num < 5) {
       vertex <- generate_span_vectors(vertex) %*% diag(
@@ -389,7 +403,7 @@ calculate_omega_overlap <- function(A, B, raw = FALSE, nsamples = 1000,
     }
 
     # Sample points uniformly on the unit sphere: nsamples x n matrix
-    samples <- runif_on_sphere(n = nsamples, d = num, r = 1)
+    samples <- .runif_on_sphere(n = nsamples, d = num, r = 1)
 
     # Vectorized: compute all transformations at once via matrix multiply
     # Na = -A_inv %*% t(samples) -> n x nsamples; each column = one sample
@@ -505,7 +519,7 @@ calculate_omega_constraint <- function(A, B, raw = FALSE, nsamples,
     if (missing(nsamples)) nsamples <- max(2^num * 250, 1000)
 
     # Vectorized sampling and membership check
-    samples <- runif_on_sphere(n = nsamples, d = num, r = 1)
+    samples <- .runif_on_sphere(n = nsamples, d = num, r = 1)
     Na <- -A_inv %*% t(samples)
     Br <- B %*% t(samples)
 

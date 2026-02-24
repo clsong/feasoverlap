@@ -1,6 +1,6 @@
 Package: feasoverlap
 Title: Measure the Overlap Between Two High-Dimensional Feasibility Domains
-Version: 0.3
+Version: 0.3.1
 Authors@R: 
     c(person("Chuliang", "Song", , "clsong.ecology@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7490-8626")),
@@ -19,7 +19,6 @@ Imports:
     mvtnorm,
     pracma,
     stats,
-    uniformly,
     utils
 Suggests: 
     testthat (>= 3.0.0)
